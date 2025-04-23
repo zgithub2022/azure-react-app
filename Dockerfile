@@ -1,11 +1,13 @@
 # Stage 1: Build the React app
-FROM node:18-alpine AS build
+FROM node:alpine AS build
 USER 1000
 WORKDIR /app
+ENV PATH /app/node_modules/.bin:$PATH
 # Leverage caching by installing dependencies first
 COPY package.json package-lock.json ./
 USER root
-RUN npm install --frozen-lockfile
+RUN npm install --silent
+#RUN npm install react-scripts@3.4.1 -g --silent
 # Copy the rest of the application code and build for production
 COPY . ./
 RUN chown -R node:node /app/node_modules
@@ -13,14 +15,15 @@ USER 1000
 RUN npm run build
 
 # Stage 2: Development environment
-FROM node:23-alpine AS development
+FROM node:alpine AS development
 USER 1000
 WORKDIR /app
-
+ENV PATH /app/node_modules/.bin:$PATH
 # Install dependencies again for development
 COPY package.json package-lock.json ./
 USER root
-RUN npm install --frozen-lockfile
+RUN npm install --silent
+#RUN npm install react-scripts@3.4.1 -g --silent
 # Copy the full source code
 COPY . ./
 RUN chown -R node:node /app/node_modules
