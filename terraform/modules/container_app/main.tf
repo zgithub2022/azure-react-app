@@ -2,10 +2,16 @@ resource "random_id" "suffix" {
   byte_length = 8
 }
 
+
+resource "azurerm_resource_group" "react_container_app_rg" {
+  name                = "var.azurerm_rg-${var.environment}"
+  location            = var.location
+}
+
 resource "azurerm_service_plan" "react_container_app_sp" {
   name                = "react-container-app-sp-${random_id.suffix.hex}-${var.environment}"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
+  resource_group_name = azurerm_resource_group.react_container_app_rg.name
   os_type  = "Linux"
   sku_name = var.app_tier
   tags = {
@@ -16,11 +22,11 @@ resource "azurerm_service_plan" "react_container_app_sp" {
 resource "azurerm_linux_web_app" "react_container_app" {
   name                       = "react-container-app-${random_id.suffix.hex}-${var.environment}"
   location                   = var.location
-  resource_group_name        = data.azurerm_resource_group.react_container_app_rg.name
-  service_plan_id = azurerm_service_plan.react_container_app_sp.id
+  resource_group_name        = azurerm_resource_group.react_container_app_rg.name
+  service_plan_id            = azurerm_service_plan.react_container_app_sp.id
    app_settings = {
     WEBSITES_PORT = var.container_port
-  }
+   }
   site_config {
     always_on = false
     # minimum_tls_version = 1.2
@@ -43,8 +49,4 @@ resource "azurerm_linux_web_app" "react_container_app" {
   tags = {
      "environment" = var.environment
   }
-}
-
-data "azurerm_resource_group" "react_container_app_rg" {
-  name     = var.azurerm_rg
 }
