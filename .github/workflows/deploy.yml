@@ -73,6 +73,8 @@ jobs:
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init -input=false
@@ -116,6 +118,7 @@ jobs:
             echo "Terraform plan was successful"
             exit 0
           fi
+
       - name: Terraform Apply
         run: |
           terraform apply -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
@@ -123,3 +126,14 @@ jobs:
             -var "acr_username=${{ secrets.ACR_USERNAME }}" \
             -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}"
+     
+      - name: validate endpoint of webapp
+        run: |
+          endpoint=$(terraform output azurerm_container_app_url) && statuscode=$(curl https://$endpoint)
+          if [ $statuscode -ne 200 ]; then
+            echo "Error: Endpoint didn't work"
+            exit 1
+          else
+            echo "Webapp deployment and test was successful"
+            exit 0
+          fi

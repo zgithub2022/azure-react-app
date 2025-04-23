@@ -4,8 +4,11 @@ resource "random_id" "suffix" {
 
 
 resource "azurerm_resource_group" "react_container_app_rg" {
-  name                = "var.azurerm_rg-${var.environment}"
+  name                = "${var.azurerm_rg}-${var.environment}"
   location            = var.location
+  tags = {
+     "environment" = var.environment
+  }
 }
 
 resource "azurerm_service_plan" "react_container_app_sp" {
