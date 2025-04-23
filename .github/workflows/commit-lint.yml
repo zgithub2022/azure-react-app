@@ -1,0 +1,26 @@
+name: Super Linter
+
+on:
+  push:
+    branches:
+      - main
+      # - feature/azure-test
+  # pull_request:
+  #   branches:
+  #     - main
+
+jobs:
+  super-linter:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Lint Code Base
+      uses: github/super-linter@v4
+      env:
+        DEFAULT_BRANCH: main
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        VALIDATE_COMMIT_MSG: true
+        COMMIT_MSG_LINTER_RULES: commitlint.config.js

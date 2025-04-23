@@ -29,7 +29,7 @@ USER 1000
 CMD ["npm", "start"]
 
 # Stage 3: Staging environment
-FROM nginx:alpine AS staging
+FROM nginx:alpine AS uat
 # Copy the production build artifacts from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
 RUN chown -R nginx:root /etc/nginx

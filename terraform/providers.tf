@@ -12,7 +12,7 @@ terraform {
   }
   backend "azurerm" {
       resource_group_name  = "react-rg"
-      storage_account_name = "reactapptwentythreeapr"
+      storage_account_name = "reactapptwentyfourapr"
       container_name       = "tfstate"
       key                  = "path/to/my/terraform.tfstate"
   }
@@ -21,6 +21,6 @@ terraform {
 provider "azurerm" {
   # Configuration options
   features {}
-  subscription_id = "8c11bf93-bc1d-4db6-b668-158dd1e8072c"
+  subscription_id = "f5e577ff-395f-4fc5-a5b4-bc6301aa8b35"
   # resource_provider_registrations = "none"
 }
