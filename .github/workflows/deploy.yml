@@ -129,7 +129,12 @@ jobs:
      
       - name: validate endpoint of webapp
         run: |
-          endpoint=$(terraform output azurerm_container_app_url) && statuscode=$(curl https://$endpoint)
+          output=$(terraform output azurerm_container_app_url)
+          echo $output
+          #get rid of double quotes  
+          endpoint = echo "$output"|tr -d '"'
+          statuscode=$(curl https://$endpoint -w "%{http_code}")
+          echo $statuscode
           if [ $statuscode -ne 200 ]; then
             echo "Error: Endpoint didn't work"
             exit 1
