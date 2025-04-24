@@ -29,13 +29,11 @@ variable "docker_image_name" {
 variable "acr_username" {
   description = "The tag of docker image"
   type        = string
-  default     = "latest"
 }
 
 variable "acr_password" {
   description = "The tag of docker image"
   type        = string
-  default     = "latest"
   sensitive = true
 }
 
