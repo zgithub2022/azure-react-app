@@ -37,6 +37,7 @@ Additionally save the Container Registry webapptwentyfourapr.azurecr.io as ACR_L
 [Dev](https://react-container-app-a8fe9912f05b239a-dev.azurewebsites.net)
 [UAT](https://react-container-app-2591d109a443d2c3-uat.azurewebsites.net)
 [PROD](https://react-container-app-599bfb95f76fa8b8-prod.azurewebsites.net)
+
 - As part of each pipeline, a new resource group, a web price plan and a web app is created. 
 - There is a workflow to destroy as well which will only destroy web app and associated resource group and price plan and is currently in disabled state and tied to branch feature/azure-test-destroy for dev.
 ## Release to Production
