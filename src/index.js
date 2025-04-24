@@ -5,9 +5,12 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const RootComponent = () => ( 
-    <React.StrictMode>
-    <App />
-    </React.StrictMode>
+    <TransactionProvider>
+        <React.StrictMode>
+            <App />
+        </React.StrictMode>
+    </TransactionProvider>
+
 );
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

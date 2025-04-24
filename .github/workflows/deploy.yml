@@ -135,7 +135,7 @@ jobs:
           output=$(terraform output azurerm_container_app_url)
           echo "output: $output"
           #get rid of double quotes  
-          endpoint=echo "$output"|tr -d '"'
+          endpoint= echo "$output"|tr -d '"'
           echo "endpoint: $endpoint"
           requestURL=`echo https://$endpoint`
           echo "requestURL: $requestURL"
