@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/zgithub2022/azure-react-app/compare/v1.3.0...v1.4.0) (2025-04-24)
+
+
+### Features
+
+* changing provider to have subscription id ([#14](https://github.com/zgithub2022/azure-react-app/issues/14)) ([fa21ad1](https://github.com/zgithub2022/azure-react-app/commit/fa21ad1a1ccc3e4eb934fbb83898934e37a699fb))
+* updating read me page  ([9638e49](https://github.com/zgithub2022/azure-react-app/commit/9638e499cad97cc8649a3169446e920637793c5c))
+
 # [1.3.0](https://github.com/zgithub2022/azure-react-app/compare/v1.2.2...v1.3.0) (2025-04-24)
 
 
