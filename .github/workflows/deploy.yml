@@ -14,7 +14,7 @@ env:
   BUILD_ENVIRONMENT: ${{
     github.ref_name == 'master' && 'production' ||
     github.ref_name == 'main' && 'uat' ||
-    github.ref_name ~= 'feature/*' && 'development' }}
+    github.ref_name =~ '^(feature|release|bugfix)/[a-z]{2,}[a-z0-9._-]+$' && 'development' }}
   tf_actions_working_dir: terraform
 
 jobs:
