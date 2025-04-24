@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/zgithub2022/azure-react-app/compare/v1.5.0...v1.5.1) (2025-04-24)
+
+
+### Bug Fixes
+
+* removing default value  ([06d15d5](https://github.com/zgithub2022/azure-react-app/commit/06d15d5520afe7e90027e58cf08e21a3857bc50a))
+
 # [1.5.0](https://github.com/zgithub2022/azure-react-app/compare/v1.4.0...v1.5.0) (2025-04-24)
 
 
