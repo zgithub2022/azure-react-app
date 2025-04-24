@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/zgithub2022/azure-react-app/compare/v1.2.0...v1.2.1) (2025-04-24)
+
+
+### Bug Fixes
+
+* linting fix ([4b0a291](https://github.com/zgithub2022/azure-react-app/commit/4b0a29180e7464d7c5ffedd5e71cfdfda9713eaf))
+* linting fix ([e7fc422](https://github.com/zgithub2022/azure-react-app/commit/e7fc4221b54eb0b2534762ac78a482f8cac4d74a))
+
 # [1.2.0](https://github.com/zgithub2022/azure-react-app/compare/v1.1.2...v1.2.0) (2025-04-24)
 
 
