@@ -1,5 +1,5 @@
 # Stage 1: Build the React app
-FROM node:alpine AS build
+FROM node:23-alpine AS build
 USER 1000
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
@@ -15,7 +15,7 @@ USER 1000
 RUN npm run build
 
 # Stage 2: Development environment
-FROM node:alpine AS development
+FROM node:23-alpine AS development
 USER 1000
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH

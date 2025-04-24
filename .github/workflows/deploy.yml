@@ -133,7 +133,8 @@ jobs:
           echo "output: $output"
           #get rid of double quotes  
           endpoint= echo "$output"|tr -d '"'
-          statuscode=$(curl https://"$endpoint" -w "%{http_code}" -o http_code)
+          requestURL=https://$endpoint
+          statuscode=$(eval "curl -s -o /dev/null -w "%{http_code}" $requestURL")
           echo "statuscode: $statuscode"
           if [ $statuscode -ne 200 ]; then
             echo "Error: Endpoint didn't work"
