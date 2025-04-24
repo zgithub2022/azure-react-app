@@ -1,3 +1,12 @@
+## [1.0.1](https://github.com/zgithub2022/azure-react-app/compare/v1.0.0...v1.0.1) (2025-04-24)
+
+
+### Bug Fixes
+
+* npm publish not required ([854c629](https://github.com/zgithub2022/azure-react-app/commit/854c629cb5b97b9cc7108cd11825b4fa13eff9f7))
+* npm publish not required ([fbaa901](https://github.com/zgithub2022/azure-react-app/commit/fbaa901da543e608dac4c4744525521292a75afb))
+* npm publish not required ([57eff1c](https://github.com/zgithub2022/azure-react-app/commit/57eff1c18d1f5cbfdcfa91b7f80830f20f4f1ded))
+
 # 1.0.0 (2025-04-24)
 
 
