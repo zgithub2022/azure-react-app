@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - feature/azure-test
+      - feature/*
   pull_request:
     branches:
       - main
@@ -14,6 +15,7 @@ env:
     github.ref_name == 'master' && 'production' ||
     github.ref_name == 'main' && 'uat' ||
     github.ref_name == 'feature/azure-test' && 'development' }}
+    # github.ref_name =~ '^(feature|release|bugfix)/[a-z]{2,}[a-z0-9._-]+$' && 'development' }}
   tf_actions_working_dir: terraform
 
 jobs:
