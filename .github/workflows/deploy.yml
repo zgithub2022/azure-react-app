@@ -10,7 +10,7 @@ on:
 
 env:
   BUILD_ENVIRONMENT: ${{
-    startsWith(github.ref_name, 'refs/tags') && 'production' ||
+    startsWith(github.ref_name, 'production') && 'production' ||
     github.ref_name == 'main' && 'uat' ||
     startsWith(github.ref_name,  'feature') && 'development' }}
   tf_actions_working_dir: terraform
