@@ -22,6 +22,7 @@ jobs:
     - name: Install dependencies
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: |
         npm install @semantic-release/changelog -D
         npm install @semantic-release/git -D
