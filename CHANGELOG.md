@@ -1,3 +1,16 @@
+# [1.1.0](https://github.com/zgithub2022/azure-react-app/compare/v1.0.1...v1.1.0) (2025-04-24)
+
+
+### Bug Fixes
+
+* this should kick off prod ([9c45c60](https://github.com/zgithub2022/azure-react-app/commit/9c45c60686b3eb11ac494d7c0a40f64f7695f811))
+* this should kick off prod ([4345a28](https://github.com/zgithub2022/azure-react-app/commit/4345a28f6634c76b7bb09e87d75370472b1bf276))
+
+
+### Features
+
+* production link qwest ([111d28c](https://github.com/zgithub2022/azure-react-app/commit/111d28c7052f96e0159942e222f70647f62f720a))
+
 ## [1.0.1](https://github.com/zgithub2022/azure-react-app/compare/v1.0.0...v1.0.1) (2025-04-24)
 
 
