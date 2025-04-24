@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/zgithub2022/azure-react-app/compare/v1.4.0...v1.5.0) (2025-04-24)
+
+
+### Features
+
+* add readme file ([b10dac2](https://github.com/zgithub2022/azure-react-app/commit/b10dac2c091daa3f11e0e402dfc34a2aa33baad4))
+
 # [1.4.0](https://github.com/zgithub2022/azure-react-app/compare/v1.3.0...v1.4.0) (2025-04-24)
 
 
