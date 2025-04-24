@@ -135,12 +135,12 @@ jobs:
           output=$(terraform output azurerm_container_app_url)
           echo "output: $output"
           #get rid of double quotes  
-          endpoint= echo "$output"|tr -d '"'
-          requestURL=https://$endpoint
+          endpoint= echo "${output}"|tr -d '"'
+          requestURL="https://${endpoint}"
           echo "requestURL: $requestURL"
-          statuscode=$(eval "curl -s -o /dev/null -w '%{http_code}' $requestURL")
-          echo "statuscode: $statuscode"
-          if [ $statuscode -ne 200 ]; then
+          statuscode=$(eval "curl -s -o /dev/null -w '%{http_code}' ${requestURL}")
+          echo "statuscode: ${statuscode}"
+          if [ ${statuscode} -ne 200 ]; then
             echo "Error: Endpoint didn't work"
             exit 1
           else
