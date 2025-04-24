@@ -3,15 +3,15 @@ name: Destroy Azure Environment
 on:
   push:
     branches:
-      - main
-      - feature/azure-test
-      - feature/azure-test-destroy
+      - main/destroy
+      - production/destroy
+      - feature/destroy
 
 env:
   BUILD_ENVIRONMENT: ${{
-    github.ref_name == 'master' && 'production' ||
-    github.ref_name == 'main' && 'uat' ||
-    github.ref_name == 'feature/azure-test-destroy' && 'development' }}
+    startsWith(github.ref_name, 'production') && 'production' ||
+    startsWith(github.ref_name, 'main') && 'uat' ||
+    startsWith(github.ref_name, 'feature)' && 'development' }}
   tf_actions_working_dir: terraform
 
 jobs:
