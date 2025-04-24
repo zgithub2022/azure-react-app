@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/zgithub2022/azure-react-app/compare/v1.1.1...v1.1.2) (2025-04-24)
+
+
+### Bug Fixes
+
+* prod build ([839e175](https://github.com/zgithub2022/azure-react-app/commit/839e175f2ddb6f7da5ae023e628f1eceb7826427))
+* this should kick off prod ([74cb044](https://github.com/zgithub2022/azure-react-app/commit/74cb0442cc51b5cdbc96a3a74131ab0e8fbcc01c))
+
 ## [1.1.1](https://github.com/zgithub2022/azure-react-app/compare/v1.1.0...v1.1.1) (2025-04-24)
 
 
