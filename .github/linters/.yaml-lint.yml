@@ -1,0 +1,9 @@
+---
+skip_list:
+  - risky-shell-pipe
+  - "yaml[line-length]"
+exclud_paths:
+  - ../workflows/deploy.yml
+  - ../workflows/destroy.yml
+  - ../workflows/commit-lint.yml
+  - ../workflows/semantic-versioning.yml
