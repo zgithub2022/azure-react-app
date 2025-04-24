@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/zgithub2022/azure-react-app/compare/v1.1.2...v1.2.0) (2025-04-24)
+
+
+### Bug Fixes
+
+* linting fix ([09f6052](https://github.com/zgithub2022/azure-react-app/commit/09f60523f0f2dbf7c10619358368f7439b1234fe))
+* this should kick off prod ([59976ab](https://github.com/zgithub2022/azure-react-app/commit/59976abc92163d197c3335fcf3de644425ff5531))
+
+
+### Features
+
+* prod tag build ([77d3599](https://github.com/zgithub2022/azure-react-app/commit/77d3599d0b33749c573699f54e85b12155da6f4a))
+
 ## [1.1.2](https://github.com/zgithub2022/azure-react-app/compare/v1.1.1...v1.1.2) (2025-04-24)
 
 
