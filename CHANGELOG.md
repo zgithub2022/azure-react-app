@@ -1,3 +1,16 @@
+# [1.3.0](https://github.com/zgithub2022/azure-react-app/compare/v1.2.2...v1.3.0) (2025-04-24)
+
+
+### Bug Fixes
+
+* prod url available now ([4da644b](https://github.com/zgithub2022/azure-react-app/commit/4da644bf9f520a560a2c41b733b7ac877d137a97))
+* prod url available now ([a2d7717](https://github.com/zgithub2022/azure-react-app/commit/a2d77171e61390ab14d3b40aec73ec642f9a2557))
+
+
+### Features
+
+* final delivery including all urls ([db0acc3](https://github.com/zgithub2022/azure-react-app/commit/db0acc35a7767504ef709a6ff709182bda28eea8))
+
 ## [1.2.2](https://github.com/zgithub2022/azure-react-app/compare/v1.2.1...v1.2.2) (2025-04-24)
 
 
