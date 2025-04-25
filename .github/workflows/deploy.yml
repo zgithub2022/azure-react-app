@@ -107,7 +107,7 @@ jobs:
           set -euo pipefail
           export exitcode=0
           terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_name=${{ secrets.ACR_NAME }}" \
+            -var "acr_name=${{ vars.ACR_NAME }}" \
             -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
             -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
@@ -125,7 +125,7 @@ jobs:
       - name: Terraform Apply
         run: |
           terraform apply -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_name=${{ secrets.ACR_NAME }}" \
+            -var "acr_name=${{ vars.ACR_NAME }}" \
             -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
             -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
