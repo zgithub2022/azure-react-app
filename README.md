@@ -14,7 +14,7 @@
 
 Additionally save the Container Registry webapptwentyfourapr.azurecr.io as ACR_LOGIN_SERVER, credentials to interact with Registry as ACR_USERNAME and ACR_PASSWORD as GitHub Action secret variables (Fetch it from Container Registry you created in portal via settings and Access Keys)
 
-- Create an app registration, name it webapp and assign a secret, this will be used for GitHub action and stored in secret as AZURE_CREDENTIALS with below value. Also attach this to subscription with role of contributor and AcrPull.
+- Create an app registration, name it webapp and assign a secret, this will be used for GitHub action and stored in secret as AZURE_CREDENTIALS with below value. Also attach this to subscription with role of owner so that a new role assignment could be created with access to AcrPull and ensure that you add a condition to only assign AcrPull role.
 
 >{
 >"clientId": "TBD",
