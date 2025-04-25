@@ -1,5 +1,5 @@
 "linterOptions": {
     "exclude": [
-        "**/*.js","**/**/*.js"
+        "src/**","src/**/*.ts"
     ]
 }

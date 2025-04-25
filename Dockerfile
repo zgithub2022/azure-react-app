@@ -10,7 +10,7 @@ RUN npm install --silent
 #RUN npm install react-scripts@3.4.1 -g --silent
 # Copy the rest of the application code and build for production
 COPY . ./
-RUN chown -R node:node /app/node_modules
+RUN chown -R node:node /app/node_modules && mkdir -p /app/build && chown -R node:node /app/build
 USER 1000
 RUN npm run build
 
@@ -35,9 +35,7 @@ CMD ["npm", "start"]
 FROM nginx:alpine AS uat
 # Copy the production build artifacts from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
-RUN chown -R nginx:root /etc/nginx
-RUN chown nginx:root /var/cache/nginx
-RUN chown nginx:root /run
+RUN chown -R nginx:root /etc/nginx && chown nginx:root /var/cache/nginx && chown nginx:root /run
 USER nginx
 # Expose the default NGINX port
 EXPOSE 80
@@ -47,9 +45,7 @@ CMD ["nginx", "-g", "daemon off;"]
 FROM nginx:alpine AS production
 # Copy the production build artifacts from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
-RUN chown -R nginx:root /etc/nginx
-RUN chown nginx:root /var/cache/nginx
-RUN chown nginx:root /run
+RUN chown -R nginx:root /etc/nginx && chown nginx:root /var/cache/nginx && chown nginx:root /run
 USER nginx
 # Expose the default NGINX port
 EXPOSE 80

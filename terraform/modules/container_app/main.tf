@@ -11,6 +11,12 @@ resource "azurerm_resource_group" "react_container_app_rg" {
   }
 }
 
+resource "azurerm_role_assignment" "acr_pull" {
+  scope                = data.azurerm_container_registry.acr.id
+  role_definition_name = "AcrPull"
+  principal_id         = azurerm_linux_web_app.react_container_app.identity[0].principal_id
+}
+
 resource "azurerm_service_plan" "react_container_app_sp" {
   name                = "react-container-app-sp-${random_id.suffix.hex}-${var.environment}"
   location            = var.location
@@ -27,17 +33,20 @@ resource "azurerm_linux_web_app" "react_container_app" {
   location                   = var.location
   resource_group_name        = azurerm_resource_group.react_container_app_rg.name
   service_plan_id            = azurerm_service_plan.react_container_app_sp.id
-   app_settings = {
+  identity {
+    type = "SystemAssigned"
+  }
+
+  app_settings = {
     WEBSITES_PORT = var.container_port
-   }
+  }
+
   site_config {
     always_on = false
     # minimum_tls_version = 1.2
     application_stack {
       docker_image_name = var.docker_image_name
       docker_registry_url = var.acr_login_url
-      docker_registry_username = var.acr_username
-      docker_registry_password = var.acr_password
     }
     ip_restriction_default_action = "Deny" 
 
@@ -52,4 +61,9 @@ resource "azurerm_linux_web_app" "react_container_app" {
   tags = {
      "environment" = var.environment
   }
+}
+
+data "azurerm_container_registry" "acr" {
+  name  = var.acr_name
+  resource_group_name = azurerm_resource_group.react_container_app_rg.name
 }
