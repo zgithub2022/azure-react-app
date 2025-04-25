@@ -65,5 +65,5 @@ resource "azurerm_linux_web_app" "react_container_app" {
 
 data "azurerm_container_registry" "acr" {
   name  = var.acr_name
-  resource_group_name = azurerm_resource_group.react_container_app_rg.name
+  resource_group_name = var.azurerm_rg 
 }
