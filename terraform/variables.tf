@@ -10,6 +10,12 @@ variable "location" {
   default     = "West US"
 }
 
+variable "registrylocation" {
+  description = "The location for Azure resources."
+  type        = string
+  default     = "East US"
+}
+
 variable "environment" {
   description = "Environment for the app"
   type        = string
