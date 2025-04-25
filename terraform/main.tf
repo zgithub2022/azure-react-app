@@ -1,6 +1,6 @@
 module "contaier_app" {
   source            = "./modules/container_app"
-  environment = var.environment
+  environment       = var.environment
   azurerm_rg        = var.azurerm_rg
   location          = var.location
   acr_login_url     = var.acr_login_url
@@ -9,5 +9,4 @@ module "contaier_app" {
   app_tier          = var.app_tier
   ip_address_list   = var.ip_address_list
   container_port    = var.container_port
-  registrylocation  = var.registrylocation
 }
