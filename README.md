@@ -30,7 +30,7 @@ Additionally save the Container Registry webapptwentyfourapr.azurecr.io as ACR_L
 3. environment -> This has been used to name the price plan and web app e.g. dev, uat and prod
 4. ip_address_list -> list of whitelisted ip address from where app can be accessed e.g. if anywhere then ["0.0.0.0/0"]
 5. container_port -> port where container is exposing the web app e.g. 3000 in dev and 80 in uat and prod
-
+- Please make a note that docker build through az acr is not supported in as a free customer hence while building the image, docker credentials have been used from azure container registry. Also if app has been deployed initially with docker credentials, to redeploy with a role identity would need to be manually generated otherwise plan will fail.
 ## Automation
 - Pipeline will fail if your commit message doesn't use below format e.g. "feat: new feature", "fix: fix of the code", "chore: generic change", "BREAKING CHANGE: new non backward compatible change" etc so first part allowed are build, chore, ci, docs, feat, perf, refactor, revert, style, test, BREAKING CHANGE and there must be ':' after that.
 - commit your code from branch feature/azure-test which should kick off a GitHub action and should create a docker image and push into azure container registry and deploy this as a webapp exposing your application on port 3000 from container whiwh is equivalent to Dev
