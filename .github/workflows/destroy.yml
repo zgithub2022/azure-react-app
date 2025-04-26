@@ -9,9 +9,9 @@ on:
 
 env:
   BUILD_ENVIRONMENT: ${{
-    startsWith(github.ref_name, 'production') && 'production' ||
-    startswith(github.ref_name, 'main') && 'uat' ||
-    startsWith(github.ref_name,  'feature') && 'development' }}
+    github.ref_name == 'production/destroy' && 'production' ||
+    github.ref_name == 'main/destroy' && 'uat' ||
+    github.ref_name == 'feature/destroy' && 'development' }}
   tf_actions_working_dir: terraform
 
 jobs:
