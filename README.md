@@ -34,7 +34,7 @@ Additionally save the Container Registry webapptwentyfourapr.azurecr.io as ACR_L
 - Once a release branch is created from a tag being named as master, this should kick off a github action from main and should create a docker image and push into azure container registry and deploy this as a webapp exposing your application on port 80 which will be treated as UAT. However this currently doesn't work so please refer notes below about Release to Production
 - Docker Image for Dev, UAT & Production will be different. 
 - Link for Web App is provided from terraform output which are as below:
-[Dev](https://react-container-app-a8fe9912f05b239a-dev.azurewebsites.net)
+[Dev](https://react-container-app-59b2a58c9381f0f8-dev.azurewebsites.net)
 [UAT](https://react-container-app-2591d109a443d2c3-uat.azurewebsites.net)
 [PROD](https://react-container-app-599bfb95f76fa8b8-prod.azurewebsites.net)
 - As part of each pipeline, a new resource group, a web price plan and a web app is created. 
