@@ -14,7 +14,7 @@ resource "azurerm_resource_group" "react_container_app_rg" {
 resource "azurerm_user_assigned_identity" "webapp_id" {
   location            = var.location
   name                = "containerappmi-${var.environment}"
-  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
+  resource_group_name = azurerm_resource_group.react_container_app_rg.name
     tags = {
      "environment" = var.environment
   }
