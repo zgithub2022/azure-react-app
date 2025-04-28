@@ -2,12 +2,12 @@ name: Deploy to Azure
 
 on:
   push:
-    tags:        
-    - 'v*'           # Push events to every tag not containing /
     branches:
       - main
       - feature/*
       - production/*
+    tags:        
+    - 'v*'           # Push events to every tag not containing /
 
 env:
   BUILD_ENVIRONMENT: ${{
