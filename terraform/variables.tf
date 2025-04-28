@@ -26,15 +26,9 @@ variable "docker_image_name" {
   type        = string
 }
 
-variable "acr_username" {
-  description = "The tag of docker image"
+variable "acr_name" {
+  description = "Container Registry Name"
   type        = string
-}
-
-variable "acr_password" {
-  description = "The tag of docker image"
-  type        = string
-  sensitive   = true
 }
 
 variable "app_tier" {
@@ -51,4 +45,9 @@ variable "ip_address_list" {
 variable "container_port" {
   description = "container port"
   type        = number
+}
+
+variable "subscription_id" {
+  description = "azure subscription"
+  type        = string
 }

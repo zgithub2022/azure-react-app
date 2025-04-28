@@ -26,15 +26,9 @@ variable "docker_image_name" {
   type        = string
 }
 
-variable "acr_username" {
+variable "acr_name" {
   description = "The tag of docker image"
   type        = string
-}
-
-variable "acr_password" {
-  description = "The tag of docker image"
-  type        = string
-  sensitive = true
 }
 
 variable "app_tier" {

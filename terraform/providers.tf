@@ -3,7 +3,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>4.26.0"
+      version = "~> 4.26.0"
     }
     random = {
       source  = "hashicorp/random"
@@ -11,15 +11,15 @@ terraform {
     }
   }
   backend "azurerm" {
-      resource_group_name  = "react-rg"
-      storage_account_name = "reactapptwentyfourapr"
-      container_name       = "tfstate"
-      key                  = "path/to/my/terraform.tfstate"
+    resource_group_name  = "react-rg"
+    storage_account_name = "reactapptwentyfourapr"
+    container_name       = "tfstate"
+    key                  = "path/to/my/terraform.tfstate"
   }
 }
 
 provider "azurerm" {
   # Configuration options
   features {}
-  subscription_id = "f5e577ff-395f-4fc5-a5b4-bc6301aa8b35"
+  subscription_id = var.subscription_id
 }
