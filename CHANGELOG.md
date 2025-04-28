@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/zgithub2022/azure-react-app/compare/v1.12.0...v1.13.0) (2025-04-28)
+
+
+### Features
+
+* deploy in prod ([#29](https://github.com/zgithub2022/azure-react-app/issues/29)) ([473928a](https://github.com/zgithub2022/azure-react-app/commit/473928a7ab47190960b9b630188d87efa415bbb1))
+
 # [1.11.0](https://github.com/zgithub2022/azure-react-app/compare/v1.10.1...v1.11.0) (2025-04-28)
 
 
