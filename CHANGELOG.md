@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/zgithub2022/azure-react-app/compare/v1.5.2...v1.6.0) (2025-04-28)
+
+
+### Features
+
+* deploy webapp using acrpull roll assignment ([c7ae02e](https://github.com/zgithub2022/azure-react-app/commit/c7ae02e9b18ec70edc95685d6ebfc33bfe6c632b))
+
 ## [1.5.2](https://github.com/zgithub2022/azure-react-app/compare/v1.5.1...v1.5.2) (2025-04-26)
 
 
