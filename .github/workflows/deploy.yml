@@ -3,7 +3,7 @@ name: Deploy to Azure
 on:
   push:
     tags:        
-      - '*'           # Push events to every tag not containing /
+      - 'v*'           # Push events to every tag not containing /
     branches:
       - main
       - feature/*
