@@ -11,10 +11,22 @@ resource "azurerm_resource_group" "react_container_app_rg" {
   }
 }
 
+resource "azurerm_user_assigned_identity" "webapp_id" {
+  location            = var.location
+  name                = "containerappmi-${var.environment}"
+  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
+    tags = {
+     "environment" = var.environment
+  }
+}
+
 resource "azurerm_role_assignment" "acr_pull" {
   scope                = data.azurerm_container_registry.acr.id
   role_definition_name = "AcrPull"
-  principal_id         = azurerm_linux_web_app.react_container_app.identity[0].principal_id
+  principal_id         = azurerm_user_assigned_identity.webapp_id.principal_id
+  depends_on = [ 
+    azurerm_user_assigned_identity.webapp_id
+   ]
 }
 
 resource "azurerm_service_plan" "react_container_app_sp" {
@@ -34,7 +46,8 @@ resource "azurerm_linux_web_app" "react_container_app" {
   resource_group_name        = azurerm_resource_group.react_container_app_rg.name
   service_plan_id            = azurerm_service_plan.react_container_app_sp.id
   identity {
-    type = "SystemAssigned"
+      type = "UserAssigned"
+      identity_ids = [azurerm_user_assigned_identity.webapp_id.id]
   }
 
   app_settings = {
@@ -43,6 +56,8 @@ resource "azurerm_linux_web_app" "react_container_app" {
 
   site_config {
     always_on = false
+    container_registry_use_managed_identity = true
+    container_registry_managed_identity_client_id = azurerm_user_assigned_identity.webapp_id.client_id
     # minimum_tls_version = 1.2
     application_stack {
       docker_image_name = var.docker_image_name
