@@ -51,4 +51,4 @@ Additionally save the Container Registry webapptwentyfourapr.azurecr.io as ACR_L
 1. Creation of tag is not resulting in kick off for production deployment
 2. Follow the manual process for production deployment
 3. To destroy the envrionment, please ensure you name your branch as feature/destroy, main/destroy and production/destroy respectively for dev, uat and production
-4. There are linting issues which needs looking. 
+4. There are linting issues which needs looking.
