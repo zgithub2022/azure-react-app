@@ -7,7 +7,7 @@ on:
       - feature/*
       - production/*
     tags:        
-    - 'v*'           # Push events to every tag not containing /
+    - 'v*'
 
 env:
   BUILD_ENVIRONMENT: ${{
