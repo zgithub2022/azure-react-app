@@ -10,7 +10,7 @@ RUN npm install --silent
 #RUN npm install react-scripts@3.4.1 -g --silent
 # Copy the rest of the application code and build for production
 COPY . ./
-RUN chown -R node:node /app/node_modules
+RUN chown -R node:node /app/node_modules && mkdir -p /app/build && chown -R node:node /app/build
 USER 1000
 RUN npm run build
 
