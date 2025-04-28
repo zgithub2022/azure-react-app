@@ -35,7 +35,9 @@ Additionally save the Container Registry webapptwentyfourapr.azurecr.io as ACR_L
 - Pipeline will fail if your commit message doesn't use below format e.g. "feat: new feature", "fix: fix of the code", "chore: generic change", "BREAKING CHANGE: new non backward compatible change" etc so first part allowed are build, chore, ci, docs, feat, perf, refactor, revert, style, test, BREAKING CHANGE and there must be ':' after that.
 - commit your code from branch feature/azure-test which should kick off a GitHub action and should create a docker image and push into azure container registry and deploy this as a webapp exposing your application on port 3000 from container whiwh is equivalent to Dev
 - Once Pull Request is merged into main, this should kick off a GitHub action from main and should create a docker image and push into azure container registry and deploy this as a webapp exposing your application on port 80 which will be treated as UAT
-- Once a release branch is created from a tag being named as master, this should kick off a GitHub action from main and should create a docker image and push into azure container registry and deploy this as a webapp exposing your application on port 80 which will be treated as UAT. However this currently doesn't work so please refer notes below about Release to Production
+- Once a release version is created on merge to main, create the next tag by incrementing the minor version using command below on branch main
+>git tag <next minor version> e.g. if current version is refs/tags/v1.2.1 then use git tag v1.2.2
+>Push this tag to remote repository e.g. git push origin v1.2.2
 - Docker Image for Dev, UAT & Production will be different. 
 - Link for Web App is provided from terraform output which are as below:
 [Dev](https://react-container-app-59b2a58c9381f0f8-dev.azurewebsites.net)
