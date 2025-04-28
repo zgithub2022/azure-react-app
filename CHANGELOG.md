@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/zgithub2022/azure-react-app/compare/v1.5.1...v1.5.2) (2025-04-26)
+
+
+### Bug Fixes
+
+* destroy pipeline corrected ([e324a4e](https://github.com/zgithub2022/azure-react-app/commit/e324a4e013442f2f14c338f4f09c698bca873228))
+
 ## [1.5.1](https://github.com/zgithub2022/azure-react-app/compare/v1.5.0...v1.5.1) (2025-04-24)
 
 

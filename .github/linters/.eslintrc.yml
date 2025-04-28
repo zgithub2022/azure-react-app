@@ -17,6 +17,10 @@ ignorePatterns:
   - "src/**"
   - "src/**/*.css"
   - "public/*.html"
+  - "**/*.css"
+  - "**/**/*.css"
+  - "**/**/*.html"
+  - "**/*.html"
 
 parser: "@typescript-eslint/parser"
 
