@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/zgithub2022/azure-react-app/compare/v1.6.0...v1.7.0) (2025-04-28)
+
+
+### Features
+
+* test production ([#21](https://github.com/zgithub2022/azure-react-app/issues/21)) ([c1a5155](https://github.com/zgithub2022/azure-react-app/commit/c1a5155dc17a1de278c5ba2c93ec9c5071f2cace))
+
 # [1.6.0](https://github.com/zgithub2022/azure-react-app/compare/v1.5.2...v1.6.0) (2025-04-28)
 
 
