@@ -96,8 +96,11 @@ jobs:
           set -euo pipefail
           # shellcheck disable=SC2086,SC2046,SC2276
           login-server=$(terraform output azurerm_container_registry_name)
+          # shellcheck disable=SC2086,SC2046,SC2276
           echo "$login-server"
+          # shellcheck disable=SC2086,SC2046,SC2276
           resource-group=$(terraform output azurerm_resource_group_name)
+          # shellcheck disable=SC2086,SC2046,SC2276
           echo "$resource-group"
 
   build-and-push:
