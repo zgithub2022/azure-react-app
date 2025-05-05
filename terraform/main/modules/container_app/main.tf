@@ -85,8 +85,7 @@ resource "azurerm_linux_web_app" "react_container_app" {
 }
 
 data "azurerm_resource_group" "react_container_app_rg" {
-  name     = var.app_azurerm_rg
-  location = var.location
+  name = var.app_azurerm_rg
 }
 
 data "azurerm_container_registry" "acr" {
