@@ -1,9 +1,3 @@
-variable "container_azurerm_rg" {
-  description = "The name for the Azure resource group."
-  type        = string
-  default     = "react-rg"
-}
-
 variable "app_azurerm_rg" {
   description = "The name for the Azure resource group."
   type        = string

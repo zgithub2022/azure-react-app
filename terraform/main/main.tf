@@ -1,7 +1,6 @@
 module "contaier_app" {
   source               = "./modules/container_app"
   environment          = var.environment
-  container_azurerm_rg = var.container_azurerm_rg
   app_azurerm_rg       = var.app_azurerm_rg
   location             = var.location
   docker_image_name    = var.docker_image_name

@@ -92,7 +92,9 @@ jobs:
       - name: Get Terraform Registry
         id: registry_name
         run: |
-          # shellcheck disable=SC2086
+          #!/bin/bash
+          set -euo pipefail
+          # shellcheck disable=SC2086,SC2046,SC2276
           login-server=$(terraform output azurerm_container_registry_name)
           echo "$login-server"
           resource-group=$(terraform output azurerm_resource_group_name)
@@ -206,6 +208,7 @@ jobs:
         run: |
           #!/bin/bash
           # shellcheck disable=SC2086
+          set -euo pipefail
           part1="https://"
           part2=$(terraform output azurerm_container_app_url)
           # shellcheck disable=SC2086
