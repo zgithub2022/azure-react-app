@@ -15,7 +15,7 @@ resource "azurerm_container_registry" "acr" {
   resource_group_name = azurerm_resource_group.react_container_app_rg.name
   location            = azurerm_resource_group.react_container_app_rg.location
   sku                 = "Basic"
-  admin_enabled       = false
+  admin_enabled       = true
 }
 
 resource "azurerm_management_lock" "resource-group-level" {
