@@ -20,3 +20,10 @@ resource "azurerm_management_lock" "resource-group-level" {
   lock_level = "CanNotDelete"
   notes      = "This Resource Group can not be delete"
 }
+
+resource "azurerm_management_lock" "resource-level" {
+  name       = "resource-level"
+  scope      = azurerm_container_registry.acr.id
+  lock_level = "CanNotDelete"
+  notes      = "This Container Registry can not be deleted"
+}
