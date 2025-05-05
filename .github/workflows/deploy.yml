@@ -27,42 +27,39 @@ jobs:
       run:
         working-directory: ${{ env.tf_actions_working_dir_init }}
     steps:
-      - name: Checkout Code
+      - name: Checkout Code for ACR
         uses: actions/checkout@v2
         
-      - name: Azure Login action
+      - name: Azure Login action for ACR
         uses: azure/login@v2
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         continue-on-error: true
 
-      - name: Set up Terraform
+      - name: Set up Terraform for ACR
         uses: hashicorp/setup-terraform@v1
         with:
           terraform_wrapper: false
 
-      - name: Terraform Init
+      - name: Terraform Init for ACR
         run: terraform init
         
-      - name: Check and Create Workspace
+      - name: Check and Create Workspace for ACR
         run: |
           if ! terraform workspace list | grep -q "${{ env.BUILD_ENVIRONMENT }}"; then
             terraform workspace new "${{ env.BUILD_ENVIRONMENT }}"
           fi
 
-      - name: Terraform fmt
+      - name: Terraform fmt for ACR
         id: fmt
         run: terraform fmt
         continue-on-error: true
 
-      - name: Select Workspace
+      - name: Select Workspace for ACR
         run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
 
-      - name: Terraform Validate
+      - name: Terraform Validate for ACR
         run: terraform validate
-
-      - name: Display short commit
-        run: echo "$sha_short"
 
       - name: Terraform Plan
         run: |

@@ -4,7 +4,7 @@ resource "random_id" "suffix" {
 
 
 resource "azurerm_resource_group" "react_container_app_rg" {
-  name     = "${var.azurerm_rg}-${var.environment}"
+  name     = "react-rg-${var.environment}"
   location = var.location
   tags = {
     "environment" = var.environment
