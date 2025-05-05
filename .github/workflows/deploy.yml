@@ -14,7 +14,6 @@ env:
     github.ref_type == 'tag' && github.ref_name != 'production/destroy' && 'production' ||
     github.ref_name == 'main' && github.ref_name != 'main/destroy' && 'uat' ||
     startsWith(github.ref_name,  'feature') && github.ref_name != 'feature/destroy' && 'development' }}
-  tf_actions_working_dir_init: terraform/prereq
   tf_actions_working_dir: terraform/main
 
 jobs:
@@ -26,7 +25,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ${{ env.tf_actions_working_dir_init }}
+        working-directory: ${{ env.tf_actions_working_dir }}
     steps:
       - name: Checkout Code for ACR
         uses: actions/checkout@v2
@@ -97,83 +96,7 @@ jobs:
             echo "dockerregistry=$(terraform output azurerm_container_registry_name)"
             echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
           } >> "$GITHUB_OUTPUT"
-          
-  terraform:
-    runs-on: ubuntu-latest
-    needs: [ create-container-acr ]
-    defaults:
-      run:
-        working-directory: ${{ env.tf_actions_working_dir }}
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v2
-        
-      - name: Azure Login action
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        continue-on-error: true
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_wrapper: false
-
-      - name: Terraform Init
-        run: terraform init
-        
-      - name: Check and Create Workspace
-        run: |
-          if ! terraform workspace list | grep -q "${{ env.BUILD_ENVIRONMENT }}"; then
-            terraform workspace new "${{ env.BUILD_ENVIRONMENT }}"
-          fi
-
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt
-        continue-on-error: true
-
-      - name: Select Workspace
-        run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Display short commit
-        run: echo "$sha_short"
-
-      - name: Terraform Plan
-        run: |
-          #!/bin/bash
-          # shellcheck disable=SC2086
-          set -euo pipefail
-          export exitcode=0
-          terraform plan -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
-            -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azurecr.io" \
-            -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:latest" \
-            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
-            -var "app_azurerm_rg=${{ needs.create-container-acr.outputs.output2 }}"
-
-          # shellcheck disable=SC2086
-          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
-          if [ $exitcode -eq 1 ]; then
-            echo "Error: Terraform plan failed"
-            exit 1
-          else
-            echo "Terraform plan was successful"
-            exit 0
-          fi
-
-      - name: Terraform Apply
-        run: |
-          terraform apply -auto-approve -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
-            -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azurecr.io" \
-            -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
-            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
-            -var "app_azurerm_rg=${{ needs.create-container-acr.outputs.output2 }}"
-     
+ 
       - name: validate endpoint of webapp
         run: |
           #!/bin/bash
@@ -200,3 +123,106 @@ jobs:
             echo "Webapp deployment and test was successful"
             exit 0
           fi
+  
+  # terraform:
+  #   runs-on: ubuntu-latest
+  #   needs: [ create-container-acr ]
+  #   defaults:
+  #     run:
+  #       working-directory: ${{ env.tf_actions_working_dir }}
+  #   steps:
+  #     - name: Checkout Code
+  #       uses: actions/checkout@v2
+        
+  #     - name: Azure Login action
+  #       uses: azure/login@v2
+  #       with:
+  #         creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #       continue-on-error: true
+
+  #     - name: Set up Terraform
+  #       uses: hashicorp/setup-terraform@v1
+  #       with:
+  #         terraform_wrapper: false
+
+  #     - name: Terraform Init
+  #       run: terraform init
+        
+  #     - name: Check and Create Workspace
+  #       run: |
+  #         if ! terraform workspace list | grep -q "${{ env.BUILD_ENVIRONMENT }}"; then
+  #           terraform workspace new "${{ env.BUILD_ENVIRONMENT }}"
+  #         fi
+
+  #     - name: Terraform fmt
+  #       id: fmt
+  #       run: terraform fmt
+  #       continue-on-error: true
+
+  #     - name: Select Workspace
+  #       run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
+
+  #     - name: Terraform Validate
+  #       run: terraform validate
+
+  #     - name: Display short commit
+  #       run: echo "$sha_short"
+
+  #     - name: Terraform Plan
+  #       run: |
+  #         #!/bin/bash
+  #         # shellcheck disable=SC2086
+  #         set -euo pipefail
+  #         export exitcode=0
+  #         terraform plan -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+  #           -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
+  #           -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azurecr.io" \
+  #           -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:latest" \
+  #           -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+  #           -var "app_azurerm_rg=${{ needs.create-container-acr.outputs.output2 }}"
+
+  #         # shellcheck disable=SC2086
+  #         echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+  #         if [ $exitcode -eq 1 ]; then
+  #           echo "Error: Terraform plan failed"
+  #           exit 1
+  #         else
+  #           echo "Terraform plan was successful"
+  #           exit 0
+  #         fi
+
+  #     - name: Terraform Apply
+  #       run: |
+  #         terraform apply -auto-approve -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+  #           -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
+  #           -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azurecr.io" \
+  #           -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
+  #           -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+  #           -var "app_azurerm_rg=${{ needs.create-container-acr.outputs.output2 }}"
+     
+  #     - name: validate endpoint of webapp
+  #       run: |
+  #         #!/bin/bash
+  #         # shellcheck disable=SC2086
+  #         set -euo pipefail
+  #         part1="https://"
+  #         part2=$(terraform output azurerm_container_app_url)
+  #         # shellcheck disable=SC2086
+  #         echo "part2: $part2"
+  #         # shellcheck disable=SC2086
+  #         part3=$(echo $part2|sed -e 's/^"//' -e 's/"$//')
+  #         # shellcheck disable=SC2086
+  #         requestURL=$part1$part3
+  #         echo "requestURL: $requestURL"
+  #         # shellcheck disable=SC2086
+  #         statuscode=$(eval "curl -s -o /dev/null -w '%{http_code}' $requestURL")
+  #         # shellcheck disable=SC2086
+  #         echo "statuscode: $statuscode"
+  #         # shellcheck disable=SC2086
+  #         if [ $statuscode -ne 200 ]; then
+  #           echo "Error: Endpoint didn't work"
+  #           exit 1
+  #         else
+  #           echo "Webapp deployment and test was successful"
+  #           exit 0
+  #         fi

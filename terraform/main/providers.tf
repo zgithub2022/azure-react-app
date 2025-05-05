@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.7.2"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.2.4"
+    }
   }
   backend "azurerm" {
     resource_group_name  = "react-rg"
@@ -16,6 +20,10 @@ terraform {
     container_name       = "tfstate"
     key                  = "path/to/my/terraform.tfstate"
   }
+}
+
+provider "null" {
+  # Configuration options
 }
 
 provider "azurerm" {
