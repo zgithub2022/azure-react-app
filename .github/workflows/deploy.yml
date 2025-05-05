@@ -120,7 +120,7 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker buildx build --platform linux/amd64 -t ${{ needs.create-container-acr.outputs.output1 }}.azureecr.io/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}" --target ${{ env.BUILD_ENVIRONMENT }} .
+          docker buildx build --platform linux/amd64 -t ${{ needs.create-container-acr.outputs.output1 }}.azurecr.io/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}" --target ${{ env.BUILD_ENVIRONMENT }} .
           docker push ${{ needs.create-container-acr.outputs.output1 }}.azurecr.io/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}"
 
   terraform:
