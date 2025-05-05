@@ -24,7 +24,7 @@ jobs:
       output1: ${{ steps.registry_name.outputs.dockerregistry }}
       output2: ${{ steps.registry_name.outputs.resourcegroup }}
       output3: ${{ steps.registry_name.outputs.acrusername }}
-      output4: ${{ steps.registry_name.outputs.acrpassword }}
+      handle: ${{ steps.generate-secret.outputs.handle }}
 
     defaults:
       run:
@@ -100,9 +100,18 @@ jobs:
             echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
             echo "acrusername=$(terraform output acr_admin_username)"
           } >> "$GITHUB_OUTPUT"
-          TOKEN1=$(terraform output acr_admin_password)
+          TOKEN1=$()
           echo "::add-mask::$TOKEN1"
           echo "::set-output name=acrpassword::$TOKEN1"
+
+      - name: generate secret
+        id: generate-secret
+        shell: bash
+        run: |
+          GENERATED_SECRET=$((terraform output acr_admin_password))
+          echo "::add-mask::$GENERATED_SECRET"
+          SECRET_HANDLE=$(secret-store store-secret "$GENERATED_SECRET")
+          echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -120,12 +129,21 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: use secret
+        id: docpass
+        shell: bash
+        run: |
+          SECRET_HANDLE="${{ needs.create-container-acr.outputs.handle }}"
+          RETRIEVED_SECRET=$(secret-store retrieve-secret "$SECRET_HANDLE")
+          echo "::add-mask::$RETRIEVED_SECRET"
+          echo "We retrieved our masked secret: $RETRIEVED_SECRET"
+
       - name: Log in to Azure Container Registry
         uses: azure/docker-login@v1
         with:
           login-server: "${{ needs.create-container-acr.outputs.output1 }}.azurecr.io"
           username: "${{ needs.create-container-acr.outputs.output3 }}"
-          password: "${{ needs.create-container-acr.outputs.output4 }}"
+          password: "${{ steps.docpass.outputs.RETRIEVED_SECRET }}"
 
       - name: Build and Push Docker Image
         run: |
