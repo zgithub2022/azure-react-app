@@ -108,7 +108,7 @@ jobs:
         id: generate-secret
         shell: bash
         run: |
-          GENERATED_SECRET=$((terraform output acr_admin_password))
+          GENERATED_SECRET=$(terraform output acr_admin_password)
           echo "::add-mask::$GENERATED_SECRET"
           SECRET_HANDLE=$(secret-store store-secret "$GENERATED_SECRET")
           echo "handle=$SECRET_HANDLE" >> "$GITHUB_OUTPUT"
