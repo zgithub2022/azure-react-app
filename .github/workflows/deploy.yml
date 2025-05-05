@@ -91,14 +91,9 @@ jobs:
         run: |
           #!/bin/bash
           set -euo pipefail
-          # shellcheck disable=SC2086,SC2046,SC2276
-          dockerregistry=$(terraform output azurerm_container_registry_name)
-          # shellcheck disable=SC2086,SC2046,SC2276
-          echo "$dockerregistry"
-          # shellcheck disable=SC2086,SC2046,SC2276
-          resourcegroup=$(terraform output azurerm_resource_group_name)
-          # shellcheck disable=SC2086,SC2046,SC2276
-          echo "$resourcegroup"
+          # shellcheck disable=SC2086
+          echo "dockerregistry=$(terraform output azurerm_container_registry_name)" >> "$GITHUB_OUTPUT"
+          echo "resourcegroup=$(terraform output azurerm_resource_group_name" >> "$GITHUB_OUTPUT"
 
   build-and-push:
     runs-on: ubuntu-latest
