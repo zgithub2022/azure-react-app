@@ -25,6 +25,11 @@ variable "acr_login_url" {
   type        = string
 }
 
+variable "acr_name" {
+  description = "container registry name"
+  type        = string
+}
+
 variable "app_tier" {
   description = "The tier of app"
   type        = string

@@ -51,6 +51,7 @@ module "contaier_app" {
   location          = var.location
   docker_image_name = "my-app-${var.environment}:latest"
   acr_login_url     = azurerm_container_registry.acr.acr_login_url
+  acr_name          = azurerm_container_registry.acr.name
   app_tier          = var.app_tier
   ip_address_list   = var.ip_address_list
   container_port    = var.container_port
