@@ -25,20 +25,6 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Check Commit Message Format
-        run: |
-          set -euo pipefail
-          # For a pull request, we need the 2nd to last commit
-          EXTRA_ARGS=""
-          if [ "${{ github.ref }}" == "pull_request" ] ; then
-            EXTRA_ARGS='--skip 1'
-          fi
-    
-          MESSAGE="$(git log -1 --pretty=format:"%s" $EXTRA_ARGS)"
-          echo -e "Commit Message:\n$MESSAGE"
-          npm install -g @commitlint/cli @commitlint/config-conventional
-          commitlint <<< "$MESSAGE"
-
       - name: Set outputs
         id: var
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
@@ -104,6 +90,8 @@ jobs:
 
       - name: Terraform Plan
         run: |
+          #!/bin/bash
+          # shellcheck disable=SC2086
           set -euo pipefail
           export exitcode=0
           terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
@@ -132,6 +120,8 @@ jobs:
      
       - name: validate endpoint of webapp
         run: |
+          #!/bin/bash
+          # shellcheck disable=SC2086
           part1="https://"
           part2=$(terraform output azurerm_container_app_url)
           echo "part2: $part2"

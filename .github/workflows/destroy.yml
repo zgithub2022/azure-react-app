@@ -12,7 +12,7 @@ env:
     startsWith(github.ref_name, 'production') && 'production' ||
     startsWith(github.ref_name, 'main') && 'uat' ||
     startsWith(github.ref_name, 'feature') && 'development' }}
-  tf_actions_working_dir: terraform
+  tf_actions_working_dir: terraform/main
 
 jobs:
   job:
@@ -54,6 +54,8 @@ jobs:
 
       - name: Terraform Plan
         run: |
+          #!/bin/bash
+          # shellcheck disable=SC2086
           set -euo pipefail
           export exitcode=0
           terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \

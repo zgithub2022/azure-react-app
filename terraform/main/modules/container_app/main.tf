@@ -1,3 +1,17 @@
+terraform {
+  required_version = ">= 1.2"
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.26.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.7.2"
+    }
+  }
+}
+
 resource "random_id" "suffix" {
   byte_length = 8
 }

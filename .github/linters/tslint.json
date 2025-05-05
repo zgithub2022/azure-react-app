@@ -1,5 +1,0 @@
-"linterOptions" {
-    "exclude": [
-        "**/*.js","**/**/*.js","**/*.css","**/**/*.css"
-    ]
-}
