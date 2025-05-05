@@ -100,7 +100,7 @@ jobs:
             echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
             echo "acrusername=$(terraform output acr_admin_username)"
           } >> "$GITHUB_OUTPUT"
-          echo "$(terraform output acr_admin_password)" | gpg --symmetric --armor --passphrase ${{ secrets.GPG_PASSPHRASE }} >> ~/text
+          echo "$(terraform output acr_admin_password)" | gpg --symmetric --armor --passphrase ${{ secrets.GPG_PASSPHRASE }} > ~/text
 
 
   build-and-push:
@@ -130,7 +130,7 @@ jobs:
         with:
           login-server: "${{ needs.create-container-acr.outputs.output1 }}.azurecr.io"
           username: "${{ needs.create-container-acr.outputs.output3 }}"
-          password: cat ~/text|gpg --decrypt --passphrase ${{ secrets.GPG_PASSPHRASE }}
+          password: gpg --decrypt ~/text
 
       - name: Build and Push Docker Image
         run: |
