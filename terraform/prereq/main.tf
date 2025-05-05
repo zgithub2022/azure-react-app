@@ -33,3 +33,13 @@ resource "azurerm_management_lock" "resource-level" {
   notes      = "This Container Registry can not be deleted"
   depends_on = [azurerm_container_registry.acr]
 }
+
+resource "null_resource" "docker_build" {
+  provisioner "local-exec" {
+  command = <<EOT
+    docker build -t ${azurerm_container_registry.acr.login_server}/my-app-${var.environment}:latest --target ${var.environment} ../../.
+    az acr login --name ${azurerm_container_registry.acr.name}
+    docker push ${azurerm_container_registry.acr.login_server}/my-app-${var.environment}:latest
+  EOT
+  }
+}
