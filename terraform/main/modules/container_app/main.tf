@@ -67,7 +67,7 @@ resource "azurerm_linux_web_app" "react_container_app" {
     # minimum_tls_version = 1.2
     application_stack {
       docker_image_name   = var.docker_image_name
-      docker_registry_url = var.acr_login_url
+      docker_registry_url = "https://${var.acr_login_url}"
     }
     ip_restriction_default_action = "Deny"
 
