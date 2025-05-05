@@ -8,7 +8,7 @@ module.exports = {
     '@semantic-release/github',
     '@semantic-release/git',
     ['@semantic-release/npm', {
-      npmPublish: false,
+      npmPublish: false
     }]
   ]
 }

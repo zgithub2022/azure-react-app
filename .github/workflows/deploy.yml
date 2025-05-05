@@ -99,9 +99,8 @@ jobs:
             -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
             -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
-
+          # shellcheck disable=SC2086
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
-
           if [ $exitcode -eq 1 ]; then
             echo "Error: Terraform plan failed"
             exit 1
@@ -124,12 +123,18 @@ jobs:
           # shellcheck disable=SC2086
           part1="https://"
           part2=$(terraform output azurerm_container_app_url)
+          # shellcheck disable=SC2086
           echo "part2: $part2"
+          # shellcheck disable=SC2086
           part3=$(echo $part2|sed -e 's/^"//' -e 's/"$//')
+          # shellcheck disable=SC2086
           requestURL=$part1$part3
           echo "requestURL: $requestURL"
+          # shellcheck disable=SC2086
           statuscode=$(eval "curl -s -o /dev/null -w '%{http_code}' $requestURL")
+          # shellcheck disable=SC2086
           echo "statuscode: $statuscode"
+          # shellcheck disable=SC2086
           if [ $statuscode -ne 200 ]; then
             echo "Error: Endpoint didn't work"
             exit 1
