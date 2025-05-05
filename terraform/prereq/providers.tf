@@ -9,11 +9,6 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.7.2"
     }
-    docker = {
-      source = "cybershard/docker"
-      version = "1.0.0"
-    }
-
   }
   backend "azurerm" {
     resource_group_name  = "react-rg"
@@ -27,8 +22,4 @@ provider "azurerm" {
   # Configuration options
   features {}
   subscription_id = var.subscription_id
-}
-
-provider "docker" {
-  host = "unix:///var/run/docker.sock"
 }
