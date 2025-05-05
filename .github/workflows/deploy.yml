@@ -23,8 +23,6 @@ jobs:
     outputs:
       output1: ${{ steps.registry_name.outputs.dockerregistry }}
       output2: ${{ steps.registry_name.outputs.resourcegroup }}
-      output3: ${{ steps.registry_name.outputs.acrusername }}
-      handle: ${{ steps.generate-secret.outputs.handle }}
 
     defaults:
       run:
@@ -98,9 +96,8 @@ jobs:
           {
             echo "dockerregistry=$(terraform output azurerm_container_registry_name)"
             echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
-            echo "acrusername=$(terraform output acr_admin_username)"
           } >> "$GITHUB_OUTPUT"
-          echo "$(terraform output acr_admin_password)" | gpg --symmetric --armor --passphrase ${{ secrets.GPG_PASSPHRASE }} > ~/text
+          
   terraform:
     runs-on: ubuntu-latest
     needs: [ create-container-acr ]
