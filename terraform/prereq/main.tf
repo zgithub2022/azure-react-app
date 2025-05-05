@@ -1,8 +1,3 @@
-resource "random_id" "suffix" {
-  byte_length = 8
-}
-
-
 resource "azurerm_resource_group" "react_container_app_rg" {
   name     = "react-rg-${var.environment}"
   location = var.location
@@ -17,4 +12,11 @@ resource "azurerm_container_registry" "acr" {
   location            = azurerm_resource_group.react_container_app_rg.location
   sku                 = "Basic"
   admin_enabled       = false
+}
+
+resource "azurerm_management_lock" "resource-group-level" {
+  name       = "resource-group-level"
+  scope      = azurerm_resource_group.react_container_app_rg.name
+  lock_level = "CanNotDelete"
+  notes      = "This Resource Group can not be delete"
 }
