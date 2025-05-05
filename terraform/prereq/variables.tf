@@ -19,3 +19,8 @@ variable "app_azurerm_rg" {
   description = "azure resource group"
   type        = string
 }
+
+variable "container_registry" {
+  description = "Name of container registry"
+  type        = string
+}
