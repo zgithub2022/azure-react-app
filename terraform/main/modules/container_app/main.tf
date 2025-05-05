@@ -89,6 +89,6 @@ data "azurerm_resource_group" "react_container_app_rg" {
 }
 
 data "azurerm_container_registry" "acr" {
-  name  = var.acr_name
+  name                = var.acr_name
   resource_group_name = var.app_azurerm_rg
 }
