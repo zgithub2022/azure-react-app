@@ -67,7 +67,7 @@ jobs:
           # shellcheck disable=SC2086
           set -euo pipefail
           export exitcode=0
-          terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+          terraform plan -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
             -var "container_registry=${{ vars.ACR_NAME }}" \
             -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
           # shellcheck disable=SC2086
@@ -82,7 +82,7 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          terraform apply -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+          terraform apply -auto-approve -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
             -var "container_registry=${{ vars.ACR_NAME }}" \
             -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
 
@@ -178,7 +178,7 @@ jobs:
           # shellcheck disable=SC2086
           set -euo pipefail
           export exitcode=0
-          terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+          terraform plan -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
             -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
             -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azureecr.io" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
@@ -197,7 +197,7 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          terraform apply -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+          terraform apply -auto-approve -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
             -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
             -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azurecr.io" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
