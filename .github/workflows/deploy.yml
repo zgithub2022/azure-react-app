@@ -23,6 +23,9 @@ jobs:
     outputs:
       output1: ${{ steps.registry_name.outputs.dockerregistry }}
       output2: ${{ steps.registry_name.outputs.resourcegroup }}
+      output3: ${{ steps.registry_name.outputs.acrusername }}
+      output4: ${{ steps.registry_name.outputs.acrpassword }}
+
     defaults:
       run:
         working-directory: ${{ env.tf_actions_working_dir_init }}
@@ -94,6 +97,8 @@ jobs:
           # shellcheck disable=SC2086
           echo "dockerregistry=$(terraform output azurerm_container_registry_name)" >> "$GITHUB_OUTPUT"
           echo "resourcegroup=$(terraform output azurerm_resource_group_name)" >> "$GITHUB_OUTPUT"
+          echo "acrusername=$(terraform output acr_admin_username)" >> "$GITHUB_OUTPUT"
+          echo "acrpassword=$(terraform output acr_admin_password)" >> "$GITHUB_OUTPUT"
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -115,8 +120,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: "${{ needs.create-container-acr.outputs.output1 }}.azurecr.io"
-          username: ${{ secrets.ACR_USERNAME }}
-          password: ${{ secrets.ACR_PASSWORD }}
+          username: ${{ needs.create-container-acr.outputs.output3 }}
+          password: ${{ needs.create-container-acr.outputs.output4 }}
 
       - name: Build and Push Docker Image
         run: |
