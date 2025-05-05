@@ -14,11 +14,93 @@ env:
     github.ref_type == 'tag' && github.ref_name != 'production/destroy' && 'production' ||
     github.ref_name == 'main' && github.ref_name != 'main/destroy' && 'uat' ||
     startsWith(github.ref_name,  'feature') && github.ref_name != 'feature/destroy' && 'development' }}
+  tf_actions_working_dir_init: terraform/prereq
   tf_actions_working_dir: terraform/main
 
 jobs:
+  create-container-acr:
+    runs-on: ubuntu-latest
+    outputs:
+      output1: ${{ steps.registry_name.outputs.login-server }}
+      output2: ${{ steps.registry_name.outputs.resource-group }}
+    defaults:
+      run:
+        working-directory: ${{ env.tf_actions_working_dir_init }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
+      - name: Azure Login action
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        continue-on-error: true
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init
+        run: terraform init
+        
+      - name: Check and Create Workspace
+        run: |
+          if ! terraform workspace list | grep -q "${{ env.BUILD_ENVIRONMENT }}"; then
+            terraform workspace new "${{ env.BUILD_ENVIRONMENT }}"
+          fi
+
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt
+        continue-on-error: true
+
+      - name: Select Workspace
+        run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Display short commit
+        run: echo "$sha_short"
+
+      - name: Terraform Plan
+        run: |
+          #!/bin/bash
+          # shellcheck disable=SC2086
+          set -euo pipefail
+          export exitcode=0
+          terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+            -var "container_registry=${{ vars.ACR_NAME }}" \
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+          # shellcheck disable=SC2086
+          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+          if [ $exitcode -eq 1 ]; then
+            echo "Error: Terraform plan failed"
+            exit 1
+          else
+            echo "Terraform plan was successful"
+            exit 0
+          fi
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+            -var "container_registry=${{ vars.ACR_NAME }}" \
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+
+      - name: Get Terraform Registry
+        id: registry_name
+        run: |
+          # shellcheck disable=SC2086
+          login-server=$(terraform output azurerm_container_registry_name)
+          echo "$login-server"
+          resource-group=$(terraform output azurerm_resource_group_name)
+          echo "$resource-group"
+
   build-and-push:
     runs-on: ubuntu-latest
+    needs: create-container-acr
     outputs:
       output1: ${{ steps.var.outputs.sha_short }}
     steps:
@@ -35,18 +117,18 @@ jobs:
       - name: Log in to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+          login-server: "${{ needs.create-container-acr.outputs.output1 }}.azurecr.io"
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and Push Docker Image
         run: |
-          docker buildx build --platform linux/amd64 -t ${{ secrets.ACR_LOGIN_SERVER }}/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}" --target ${{ env.BUILD_ENVIRONMENT }} .
-          docker push ${{ secrets.ACR_LOGIN_SERVER }}/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}"
+          docker buildx build --platform linux/amd64 -t ${{ needs.create-container-acr.outputs.output1 }}.azureecr.io/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}" --target ${{ env.BUILD_ENVIRONMENT }} .
+          docker push ${{ needs.create-container-acr.outputs.output1 }}.azurecr.io/my-app-${{ env.BUILD_ENVIRONMENT }}:"${{ steps.var.outputs.sha_short }}"
 
   terraform:
     runs-on: ubuntu-latest
-    needs: build-and-push
+    needs: [ build-and-push, create-container-acr ]
     defaults:
       run:
         working-directory: ${{ env.tf_actions_working_dir }}
@@ -95,10 +177,12 @@ jobs:
           set -euo pipefail
           export exitcode=0
           terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_name=${{ vars.ACR_NAME }}" \
-            -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
+            -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
+            -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azureecr.io" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
-            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+            -var "app_azurerm_rg=${{ needs.create-container-acr.outputs.output2 }}"
+
           # shellcheck disable=SC2086
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           if [ $exitcode -eq 1 ]; then
@@ -112,10 +196,11 @@ jobs:
       - name: Terraform Apply
         run: |
           terraform apply -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_name=${{ vars.ACR_NAME }}" \
-            -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
+            -var "acr_name=${{ needs.create-container-acr.outputs.output1 }}" \
+            -var "acr_login_url=https://${{ needs.create-container-acr.outputs.output1 }}.azurecr.io" \
             -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:${{ needs.build-and-push.outputs.output1 }}" \
-            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}" \
+            -var "app_azurerm_rg=${{ needs.create-container-acr.outputs.output2 }}"
      
       - name: validate endpoint of webapp
         run: |

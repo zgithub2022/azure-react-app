@@ -10,7 +10,7 @@ on:
       - main
 
 env:
-  EXCLUDE_REGEX: "(CHANGELOG.md|README.md)"
+  EXCLUDE_REGEX: "(CHANGELOG.md|README.md|index.html)"
   VERSION: latest
 
 permissions:

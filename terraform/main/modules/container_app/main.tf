@@ -17,18 +17,10 @@ resource "random_id" "suffix" {
 }
 
 
-resource "azurerm_resource_group" "react_container_app_rg" {
-  name     = "${var.azurerm_rg}-${var.environment}"
-  location = var.location
-  tags = {
-    "environment" = var.environment
-  }
-}
-
 resource "azurerm_user_assigned_identity" "webapp_id" {
   location            = var.location
   name                = "containerappmi-${var.environment}"
-  resource_group_name = azurerm_resource_group.react_container_app_rg.name
+  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
   tags = {
     "environment" = var.environment
   }
@@ -46,7 +38,7 @@ resource "azurerm_role_assignment" "acr_pull" {
 resource "azurerm_service_plan" "react_container_app_sp" {
   name                = "react-container-app-sp-${random_id.suffix.hex}-${var.environment}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.react_container_app_rg.name
+  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
   os_type             = "Linux"
   sku_name            = var.app_tier
   tags = {
@@ -57,7 +49,7 @@ resource "azurerm_service_plan" "react_container_app_sp" {
 resource "azurerm_linux_web_app" "react_container_app" {
   name                = "react-container-app-${random_id.suffix.hex}-${var.environment}"
   location            = var.location
-  resource_group_name = azurerm_resource_group.react_container_app_rg.name
+  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
   service_plan_id     = azurerm_service_plan.react_container_app_sp.id
   identity {
     type         = "UserAssigned"
@@ -75,7 +67,7 @@ resource "azurerm_linux_web_app" "react_container_app" {
     # minimum_tls_version = 1.2
     application_stack {
       docker_image_name   = var.docker_image_name
-      docker_registry_url = var.acr_login_url
+      docker_registry_url = "${var.acr_name}.azurecr.io"
     }
     ip_restriction_default_action = "Deny"
 
@@ -94,5 +86,9 @@ resource "azurerm_linux_web_app" "react_container_app" {
 
 data "azurerm_container_registry" "acr" {
   name                = var.acr_name
-  resource_group_name = var.azurerm_rg
+  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
+}
+
+data "azurerm_resource_group" "react_container_app_rg" {
+  name = var.app_azurerm_rg
 }

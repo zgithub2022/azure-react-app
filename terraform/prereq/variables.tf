@@ -1,9 +1,3 @@
-variable "azurerm_rg" {
-  description = "The name for the Azure resource group."
-  type        = string
-  default     = "appc-react-np-rg"
-}
-
 variable "location" {
   description = "The location for Azure resources."
   type        = string

@@ -1,7 +1,12 @@
-variable "azurerm_rg" {
+variable "container_azurerm_rg" {
   description = "The name for the Azure resource group."
   type        = string
-  default     = "appc-react-np-rg"
+  default     = "react-rg"
+}
+
+variable "app_azurerm_rg" {
+  description = "The name for the Azure resource group."
+  type        = string
 }
 
 variable "environment" {
@@ -14,11 +19,6 @@ variable "location" {
   description = "The location for Azure resources."
   type        = string
   default     = "West Europe"
-}
-
-variable "acr_login_url" {
-  description = "The url for Azure Container Registry"
-  type        = string
 }
 
 variable "docker_image_name" {
