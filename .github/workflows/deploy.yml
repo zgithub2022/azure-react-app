@@ -17,7 +17,7 @@ env:
   tf_actions_working_dir: terraform/main
 
 jobs:
-  create-container-acr:
+  terraform:
     runs-on: ubuntu-latest
     outputs:
       output1: ${{ steps.registry_name.outputs.dockerregistry }}
