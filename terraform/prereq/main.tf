@@ -12,7 +12,7 @@ resource "azurerm_resource_group" "react_container_app_rg" {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = var.container_registry
+  name                = var.app_azurerm_rg
   resource_group_name = azurerm_resource_group.react_container_app_rg.name
   location            = azurerm_resource_group.react_container_app_rg.location
   sku                 = "Basic"

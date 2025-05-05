@@ -15,12 +15,7 @@ variable "subscription_id" {
   type        = string
 }
 
-variable "azurerm_rg" {
+variable "app_azurerm_rg" {
   description = "azure resource group"
-  type        = string
-}
-
-variable "container_registry" {
-  description = "container registry name"
   type        = string
 }
