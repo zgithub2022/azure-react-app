@@ -36,10 +36,10 @@ resource "azurerm_management_lock" "resource-level" {
 
 resource "null_resource" "docker_build" {
   provisioner "local-exec" {
-  command = <<EOT
-    docker build -t ${azurerm_container_registry.acr.login_server}/my-app-${var.environment}:latest --target ${var.environment} ../../.
-    az acr login --name ${azurerm_container_registry.acr.name}
-    docker push ${azurerm_container_registry.acr.login_server}/my-app-${var.environment}:latest
-  EOT
+    command = <<EOT
+      docker build -t ${azurerm_container_registry.acr.login_server}/my-app-${var.environment}:latest --target ${var.environment} ../../.
+      az acr login --name ${azurerm_container_registry.acr.name}
+      docker push ${azurerm_container_registry.acr.login_server}/my-app-${var.environment}:latest
+    EOT
   }
 }
