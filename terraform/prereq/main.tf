@@ -1,3 +1,7 @@
+resource "random_id" "suffix" {
+  byte_length = 8
+}
+
 resource "azurerm_resource_group" "react_container_app_rg" {
   name     = "react-rg-${var.environment}"
   location = var.location
@@ -7,7 +11,7 @@ resource "azurerm_resource_group" "react_container_app_rg" {
 }
 
 resource "azurerm_container_registry" "acr" {
-  name                = var.container_registry
+  name                = "${var.container_registry}-${random_id.suffix.hex}"
   resource_group_name = azurerm_resource_group.react_container_app_rg.name
   location            = azurerm_resource_group.react_container_app_rg.location
   sku                 = "Basic"
