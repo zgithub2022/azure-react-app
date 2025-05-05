@@ -4,22 +4,81 @@ on:
   push:
     branches:
       - main
+      - feature/*
   pull_request:
     branches:
       - main
 
+env:
+  EXCLUDE_REGEX: "(CHANGELOG.md|README.md)"
+  VERSION: latest
+
+permissions:
+  contents: write
+  
 jobs:
-  super-linter:
+  commit-linter:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
 
-    - name: Lint Code Base
-      uses: github/super-linter@v4
-      env:
-        DEFAULT_BRANCH: main
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VALIDATE_COMMIT_MSG: true
-        COMMIT_MSG_LINTER_RULES: commitlint.config.js
+    - name: Check Commit Message Format
+      run: |
+        #!/bin/bash
+        # shellcheck disable=SC2086
+        set -euo pipefail
+        # For a pull request, we need the 2nd to last commit
+        EXTRA_ARGS=""
+        if [ "${{ github.ref }}" == "pull_request" ] ; then
+          EXTRA_ARGS='--skip 1'
+        fi
+        
+        # shellcheck disable=SC2086
+        MESSAGE="$(git log -1 --pretty=format:"%s" $EXTRA_ARGS)"
+        echo -e "Commit Message:\n$MESSAGE"
+        npm install -g @commitlint/cli @commitlint/config-conventional
+        commitlint <<< "$MESSAGE"
+
+  super-linter:
+    runs-on: ubuntu-latest
+      
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Pull Super Linter Image
+      run: |
+        set -euo pipefail
+        docker pull github/super-linter:${{ env.VERSION }}
+
+    - name: Github super linter
+      run: |
+        #!/bin/bash
+        # shellcheck disable=SC2086
+        set -euo pipefail
+        # shellcheck disable=SC2086
+        docker run \
+          -e RUN_LOCAL=true \
+          -e FILTER_REGEX_EXCLUDE="${{ env.EXCLUDE_REGEX }}" \
+          -e VALIDATE_SQLFLUFF=false \
+          -e KUBERNETES_KUBECONFORM_OPTIONS=-ignore-missing-schemas \
+          -v ${GITHUB_WORKSPACE}:/tmp/lint \
+          github/super-linter:${{ env.VERSION }}
+
+  semantic-release:
+    runs-on: ubuntu-latest
+    needs: commit-linter
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
+      - name: Install dependencies
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          npm install @semantic-release/changelog -D
+          npm install @semantic-release/git -D
+          npm install @semantic-release/exec -D
+          npx semantic-release@24

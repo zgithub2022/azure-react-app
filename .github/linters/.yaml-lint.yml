@@ -1,9 +1,19 @@
 ---
-skip_list:
-  - risky-shell-pipe
-  - "yaml[line-length]"
-exclud_paths:
-  - ../workflows/deploy.yml
-  - ../workflows/destroy.yml
-  - ../workflows/commit-lint.yml
-  - ../workflows/semantic-versioning.yml
+ignore: |
+  ../workflows/*
+  /tmp/lint/.github/workflows/*
+  /.github/workflows/*
+  /tmp/lint/.github/workflows/deploy.yml
+  /tmp/lint/.github/workflows/destroy.yml
+  /tmp/lint/.github/workflows/commit-lint.yml
+  /tmp/lint/.github/ISSUE_TEMPLATE/bug_report.yml
+  /tmp/lint/.github/ISSUE_TEMPLATE/feature_request.yml
+
+extends: default
+
+rules:
+  line-length:
+    max: 300
+    level: warning
+  braces:
+    max-spaces-inside: 5
