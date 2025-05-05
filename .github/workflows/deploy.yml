@@ -120,8 +120,8 @@ jobs:
         uses: azure/docker-login@v1
         with:
           login-server: "${{ needs.create-container-acr.outputs.output1 }}.azurecr.io"
-          username: ${{ needs.create-container-acr.outputs.output3 }}
-          password: ${{ needs.create-container-acr.outputs.output4 }}
+          username: "${{ needs.create-container-acr.outputs.output3 }}"
+          password: "${{ needs.create-container-acr.outputs.output4 }}"
 
       - name: Build and Push Docker Image
         run: |
