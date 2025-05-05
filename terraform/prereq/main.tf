@@ -23,7 +23,6 @@ resource "azurerm_management_lock" "resource-group-level" {
   scope      = azurerm_resource_group.react_container_app_rg.id
   lock_level = "CanNotDelete"
   notes      = "This Resource Group can not be delete"
-
   depends_on = [azurerm_resource_group.react_container_app_rg]
 }
 
@@ -32,6 +31,5 @@ resource "azurerm_management_lock" "resource-level" {
   scope      = azurerm_container_registry.acr.id
   lock_level = "CanNotDelete"
   notes      = "This Container Registry can not be deleted"
-  
   depends_on = [azurerm_container_registry.acr]
 }

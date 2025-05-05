@@ -21,8 +21,8 @@ jobs:
   create-container-acr:
     runs-on: ubuntu-latest
     outputs:
-      output1: ${{ steps.registry_name.outputs.login-server }}
-      output2: ${{ steps.registry_name.outputs.resource-group }}
+      output1: ${{ steps.registry_name.outputs.dockerregistry }}
+      output2: ${{ steps.registry_name.outputs.resourcegroup }}
     defaults:
       run:
         working-directory: ${{ env.tf_actions_working_dir_init }}
@@ -92,13 +92,13 @@ jobs:
           #!/bin/bash
           set -euo pipefail
           # shellcheck disable=SC2086,SC2046,SC2276
-          login-server=$(terraform output azurerm_container_registry_name)
+          dockerregistry=$(terraform output azurerm_container_registry_name)
           # shellcheck disable=SC2086,SC2046,SC2276
-          echo "$login-server"
+          echo "$dockerregistry"
           # shellcheck disable=SC2086,SC2046,SC2276
-          resource-group=$(terraform output azurerm_resource_group_name)
+          resourcegroup=$(terraform output azurerm_resource_group_name)
           # shellcheck disable=SC2086,SC2046,SC2276
-          echo "$resource-group"
+          echo "$resourcegroup"
 
   build-and-push:
     runs-on: ubuntu-latest
