@@ -67,7 +67,7 @@ resource "azurerm_linux_web_app" "react_container_app" {
     # minimum_tls_version = 1.2
     application_stack {
       docker_image_name   = var.docker_image_name
-      docker_registry_url = "${var.acr_name}.azurecr.io"
+      docker_registry_url = var.acr_login_url
     }
     ip_restriction_default_action = "Deny"
 
@@ -82,13 +82,4 @@ resource "azurerm_linux_web_app" "react_container_app" {
   tags = {
     "environment" = var.environment
   }
-}
-
-data "azurerm_container_registry" "acr" {
-  name                = var.acr_name
-  resource_group_name = data.azurerm_resource_group.react_container_app_rg.name
-}
-
-data "azurerm_resource_group" "react_container_app_rg" {
-  name = var.app_azurerm_rg
 }

@@ -20,8 +20,8 @@ variable "docker_image_name" {
   type        = string
 }
 
-variable "acr_name" {
-  description = "The tag of docker image"
+variable "acr_login_url" {
+  description = "docker registry login"
   type        = string
 }
 

@@ -50,7 +50,7 @@ module "contaier_app" {
   app_azurerm_rg    = azurerm_resource_group.react_container_app_rg.name
   location          = var.location
   docker_image_name = "my-app-${var.environment}:latest"
-  acr_name          = azurerm_container_registry.acr.name
+  acr_login_url     = azurerm_container_registry.acr.acr_login_url
   app_tier          = var.app_tier
   ip_address_list   = var.ip_address_list
   container_port    = var.container_port
