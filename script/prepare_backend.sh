@@ -19,3 +19,4 @@ fi
 
 sed -i -e "s/RESOURCE_GROUP_NAME/${RG}/" ../../template/backend.config
 sed -i -e "s/STORAGE_ACCOUNT_NAME/${SA}/" ../../template/backend.config
+cat ../../template/backend.config
