@@ -1,4 +1,5 @@
 # Pre-requisites
+(Testing with automation)
 - Create a resource group react-rg having storage account name of reactapptwentyfourapr with a container name tfstate of Azure blob storage type. For Redundancy, select it as Locally-redundant storage. This will be used to store the statefile for all three environment.
 
 - Create an app registration, name it webapp and assign a secret, this will be used for GitHub action and stored in secret as AZURE_CREDENTIALS with below value. Also attach this to subscription with role of owner so that a new role assignment could be created with access to AcrPull and ensure that you add a condition to only assign AcrPull role.
