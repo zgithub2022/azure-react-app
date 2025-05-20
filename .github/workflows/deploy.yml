@@ -36,6 +36,14 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         continue-on-error: true
 
+      - name: Set random string
+        id: var
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: create a resource group and storage account
+        run: |
+             az create group react-"${{ steps.var.outputs.sha_short }}" -l TF_VAR_location
+
       - name: Set up Terraform for ACR
         uses: hashicorp/setup-terraform@v1
         with:
