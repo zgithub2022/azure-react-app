@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# RG=react-"${{ steps.var.outputs.sha_short }}"
-RG=react-test
-az storage account delete --name $RG --resource-group $RG -l TF_VAR_location --encryption-services blob --no-wait
-az group delete $RG -l TF_VAR_location --no-wait
+RG=react-test-"${short_sha}"
+location="East US"
+SA=$(echo "${RG}"|tr - ' '|tr -d ' ')
+az storage account delete --name "${SA}" --resource-group "${RG}" -y
+az group delete --resource-group "${RG}" -y

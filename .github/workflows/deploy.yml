@@ -41,8 +41,9 @@ jobs:
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: create a resource group and storage account
-        run: |
-             az create group react-"${{ steps.var.outputs.sha_short }}" -l TF_VAR_location
+        run: bash ../../script/prepare_backend.sh
+        env: 
+          short_sha: ${{ steps.var.outputs.sha_short }}
 
       - name: Set up Terraform for ACR
         uses: hashicorp/setup-terraform@v1
@@ -50,7 +51,7 @@ jobs:
           terraform_wrapper: false
 
       - name: Terraform Init for ACR
-        run: terraform init
+        run: terraform init -backend-config="../../template/backend.config"
         
       - name: Check and Create Workspace for ACR
         run: |
