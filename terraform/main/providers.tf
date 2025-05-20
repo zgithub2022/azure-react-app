@@ -15,10 +15,10 @@ terraform {
     }
   }
   backend "azurerm" {
-    resource_group_name  = "react-rg"
-    storage_account_name = "reactapptwentyfourapr"
-    container_name       = "tfstate"
-    key                  = "path/to/my/terraform.tfstate"
+    resource_group_name  = ""
+    storage_account_name = ""
+    container_name       = ""
+    key                  = ""
   }
 }
 
