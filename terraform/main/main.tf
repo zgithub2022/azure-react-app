@@ -55,4 +55,5 @@ module "contaier_app" {
   app_tier          = var.app_tier
   ip_address_list   = var.ip_address_list
   container_port    = var.container_port
+  depends_on = [ azurerm_resource_group.react_container_app_rg ]
 }
