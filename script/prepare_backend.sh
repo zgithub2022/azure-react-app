@@ -2,8 +2,7 @@
 
 set -uo pipefail
 
-RG=react-test-"${short_sha}"
-# RG=react-test-20may
+RG=react-test-backend
 location="East US"
 SA=$(echo "${RG}"|tr - ' '|tr -d ' ')
 az group list --query "[?location=='$location']"|grep "${RG}"
