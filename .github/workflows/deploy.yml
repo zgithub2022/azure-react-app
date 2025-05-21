@@ -127,7 +127,48 @@ jobs:
             echo "Webapp deployment and test was successful"
             exit 0
           fi
-  
+
+  destroy_terraform:
+    name: "Destroy Environment"
+    runs-on: ubuntu-latest
+    needs: [terraform]
+    # sandpit-destroy has a 2 hour timer on the environment, so this job will be automatically triggered after that time
+    # is up. This can be adjusted in the Repository home page
+    environment: azure-react-app
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: Azure Login action
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        continue-on-error: true
+
+      - name: create a resource group and storage account
+        run: bash ../../script/prepare_backend.sh
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Check and Create Workspace
+        run: |
+          if ! terraform workspace list | grep -q "${{ env.BUILD_ENVIRONMENT }}"; then
+            terraform workspace new "${{ env.BUILD_ENVIRONMENT }}"
+          fi
+
+      - name: Select Workspace
+        run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
+
+      - name: Terraform Init for ACR
+        run: terraform init -backend-config="../../template/backend.config"
+        
+      - name: Terraform Destroy
+        run: |
+          terraform destroy -auto-approve -var-file="../../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+            -var "container_registry=${{ vars.ACR_NAME }}" \
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+
   # terraform:
   #   runs-on: ubuntu-latest
   #   needs: [ create-container-acr ]
