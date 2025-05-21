@@ -135,6 +135,9 @@ jobs:
     # sandpit-destroy has a 2 hour timer on the environment, so this job will be automatically triggered after that time
     # is up. This can be adjusted in the Repository home page
     environment: azure-react-app
+    defaults:
+      run:
+        working-directory: ${{ env.tf_actions_working_dir }}    
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
