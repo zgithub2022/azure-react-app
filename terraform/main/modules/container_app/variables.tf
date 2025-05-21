@@ -45,3 +45,8 @@ variable "container_port" {
   description = "container port"
   type        = number
 }
+
+variable "container_registry_rg" {
+  description = "container registry resource group"
+  type        = string
+}
