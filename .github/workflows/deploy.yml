@@ -148,6 +148,9 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
         continue-on-error: true
 
+      - name: create a resource group and storage account
+        run: bash ../../script/prepare_backend.sh
+        
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
