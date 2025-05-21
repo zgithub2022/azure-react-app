@@ -151,6 +151,8 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
+      - name: Terraform Init for ACR
+        run: terraform init -backend-config="../../template/backend.config"
       - name: Check and Create Workspace
         run: |
           if ! terraform workspace list | grep -q "${{ env.BUILD_ENVIRONMENT }}"; then
@@ -159,9 +161,6 @@ jobs:
 
       - name: Select Workspace
         run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
-
-      - name: Terraform Init for ACR
-        run: terraform init -backend-config="../../template/backend.config"
         
       - name: Terraform Destroy
         run: |
