@@ -1,11 +1,12 @@
 name: Destroy Azure Environment
 
 on:
-  push:
-    branches:
-      - main/destroy*
-      - production/destroy*
-      - feature/destroy*
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main/destroy*
+  #     - production/destroy*
+  #     - feature/destroy*
 
 env:
   BUILD_ENVIRONMENT: ${{
@@ -52,27 +53,27 @@ jobs:
       - name: Select Workspace
         run: terraform workspace select "${{ env.BUILD_ENVIRONMENT }}"
 
-      - name: Terraform Plan
-        run: |
-          #!/bin/bash
-          set -euo pipefail
-          # shellcheck disable=SC2086
-          export exitcode=0
-          terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
-            -var "acr_password=${{ secrets.ACR_PASSWORD }}" \
-            -var "acr_username=${{ secrets.ACR_USERNAME }}" \
-            -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
-            -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:latest"
-          # shellcheck disable=SC2086
-          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+      # - name: Terraform Plan
+      #   run: |
+      #     #!/bin/bash
+      #     set -euo pipefail
+      #     # shellcheck disable=SC2086
+      #     export exitcode=0
+      #     terraform plan -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \
+      #       -var "acr_password=${{ secrets.ACR_PASSWORD }}" \
+      #       -var "acr_username=${{ secrets.ACR_USERNAME }}" \
+      #       -var "acr_login_url=https://${{ secrets.ACR_LOGIN_SERVER }}" \
+      #       -var "docker_image_name=my-app-${{ env.BUILD_ENVIRONMENT }}:latest"
+      #     # shellcheck disable=SC2086
+      #     echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
 
-          if [ $exitcode -eq 1 ]; then
-            echo "Error: Terraform plan failed"
-            exit 1
-          else
-            echo "Terraform plan was successful"
-            exit 0
-          fi
+      #     if [ $exitcode -eq 1 ]; then
+      #       echo "Error: Terraform plan failed"
+      #       exit 1
+      #     else
+      #       echo "Terraform plan was successful"
+      #       exit 0
+      #     fi
       - name: Terraform Destroy
         run: |
           terraform destroy -auto-approve -var-file="../${{ env.BUILD_ENVIRONMENT }}/${{ env.BUILD_ENVIRONMENT  }}.tfvars" \

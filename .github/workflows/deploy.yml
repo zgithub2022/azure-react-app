@@ -1,13 +1,14 @@
 name: Deploy to Azure
 
 on:
-  push:
-    branches:
-      - main
-      - feature/*
-      - production/*
-    tags:        
-    - 'v*'
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #     - feature/*
+  #     - production/*
+  #   tags:        
+  #   - 'v*'
 
 env:
   BUILD_ENVIRONMENT: ${{
