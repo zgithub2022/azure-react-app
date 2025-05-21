@@ -12,18 +12,18 @@ resource "azurerm_resource_group" "react_container_app_rg" {
 
 resource "azurerm_container_registry" "acr" {
   name                = "${var.container_registry}${random_id.suffix.hex}"
-  resource_group_name = azurerm_resource_group.react_container_app_rg.name
-  location            = azurerm_resource_group.react_container_app_rg.location
+  resource_group_name = data.azurerm_resource_group.container_registry_rg.name
+  location            = data.azurerm_resource_group.container_registry_rg.location
   sku                 = "Basic"
   admin_enabled       = true
 }
 
 resource "azurerm_management_lock" "resource-group-level" {
   name       = "resource-group-level"
-  scope      = azurerm_resource_group.react_container_app_rg.id
+  scope      = data.azurerm_resource_group.container_registry_rg.id
   lock_level = "CanNotDelete"
   notes      = "This Resource Group can not be deleted"
-  depends_on = [azurerm_resource_group.react_container_app_rg]
+  depends_on = [data.azurerm_resource_group.container_registry_rg]
 }
 
 resource "azurerm_management_lock" "resource-level" {
@@ -44,6 +44,9 @@ resource "null_resource" "docker_build" {
   }
 }
 
+data "azurerm_resource_group" "container_registry_rg" {
+  name = var.container_registry_rg
+}
 module "contaier_app" {
   source            = "./modules/container_app"
   environment       = var.environment
