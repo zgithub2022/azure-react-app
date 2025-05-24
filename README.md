@@ -1,7 +1,4 @@
 # Pre-requisites
-(Testing with automation)
-- Create a resource group react-rg having storage account name of reactapptwentyfourapr with a container name tfstate of Azure blob storage type. For Redundancy, select it as Locally-redundant storage. This will be used to store the statefile for all three environment.
-
 - Create an app registration, name it webapp and assign a secret, this will be used for GitHub action and stored in secret as AZURE_CREDENTIALS with below value. Also attach this to subscription with role of owner so that a new role assignment could be created with access to AcrPull and ensure that you add a condition to only assign AcrPull role.
 
 >{
@@ -11,9 +8,11 @@
 >"tenantId": "TBD"
 >}
 - Assign this service principle webapp as an owner to subscriptionId and allow it to get a role of AcrPull created.
+# Bash steps
+- Create a resource group react-rg-backend having storage account name of reactapptwentyfourapr(plus random character) with a container name tfstate of Azure blob storage type. For Redundancy, select it as Locally-redundant storage. This will be used to store the statefile for all three environment. Additionally this needs to be passed to terraform init as backend-config so that terraform could use this to store statefiles.
 
 # Terraform steps
-- Create resource group and Azure Container Registry. Additionally save the Container Registry webapptwentyfourapr ACR_LOGIN_SERVER, initial string for Registry name as ACR_NAME. 
+- It uses resource group in above step and Azure Container Registry. Additionally save the Container Registry webapptwentyfourapr ACR_LOGIN_SERVER, initial string for Registry name as ACR_NAME in secret so that it could derive the random name for terraform registry whenever it's destroy and recreated. 
 
 - Create a PAT Token with necessary permission to create a semantic release tag after creating an environment and save this as GH_TOKEN
 - create tfvars file for specific environment e.g. development/development.tfvars, uat/uat.tfvars, production/production.tfvars

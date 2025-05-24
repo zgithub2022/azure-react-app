@@ -20,9 +20,9 @@ env:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    outputs:
-      output1: ${{ steps.registry_name.outputs.dockerregistry }}
-      output2: ${{ steps.registry_name.outputs.resourcegroup }}
+    # outputs:
+    #   output1: ${{ steps.registry_name.outputs.dockerregistry }}
+    #   output2: ${{ steps.registry_name.outputs.resourcegroup }}
 
     defaults:
       run:
@@ -90,16 +90,126 @@ jobs:
             -var "container_registry=${{ vars.ACR_NAME }}" \
             -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
 
-      - name: Get Terraform Registry
-        id: registry_name
+      # - name: Get Terraform Registry
+      #   id: registry_name
+      #   run: |
+      #     #!/bin/bash
+      #     set -euo pipefail
+      #     # shellcheck disable=SC2086
+      #     {
+      #       echo "dockerregistry=$(terraform output azurerm_container_registry_name)"
+      #       echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
+      #     } >> "$GITHUB_OUTPUT"
+ 
+      - name: validate endpoint of webapp
         run: |
           #!/bin/bash
-          set -euo pipefail
           # shellcheck disable=SC2086
-          {
-            echo "dockerregistry=$(terraform output azurerm_container_registry_name)"
-            echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
-          } >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          part1="https://"
+          part2=$(terraform output azurerm_container_app_url)
+          # shellcheck disable=SC2086
+          echo "part2: $part2"
+          # shellcheck disable=SC2086
+          part3=$(echo $part2|sed -e 's/^"//' -e 's/"$//')
+          # shellcheck disable=SC2086
+          requestURL=$part1$part3
+          echo "requestURL: $requestURL"
+          # shellcheck disable=SC2086
+          statuscode=$(eval "curl -s -o /dev/null -w '%{http_code}' $requestURL")
+          # shellcheck disable=SC2086
+          echo "statuscode: $statuscode"
+          # shellcheck disable=SC2086
+          if [ $statuscode -ne 200 ]; then
+            echo "Error: Endpoint didn't work"
+            exit 1
+          else
+            echo "Webapp deployment and test was successful"
+            exit 0
+          fi
+
+  terraform_uat:
+    runs-on: ubuntu-latest
+    # outputs:
+    #   output1: ${{ steps.registry_name.outputs.dockerregistry }}
+    #   output2: ${{ steps.registry_name.outputs.resourcegroup }}
+    environment: uat
+    defaults:
+      run:
+        working-directory: ${{ env.tf_actions_working_dir }}
+    steps:
+      - name: Checkout Code for ACR
+        uses: actions/checkout@v2
+        
+      - name: Azure Login action for ACR
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+        continue-on-error: true
+
+      - name: create a resource group and storage account
+        run: bash ../../script/prepare_backend.sh
+
+      - name: Set up Terraform for ACR
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_wrapper: false
+
+      - name: Terraform Init for ACR
+        run: terraform init -backend-config="../../template/backend.config"
+        
+      - name: Check and Create Workspace for ACR
+        run: |
+          if ! terraform workspace list | grep -q uat; then
+            terraform workspace new uat
+          fi
+
+      - name: Terraform fmt for ACR
+        id: fmt
+        run: terraform fmt
+        continue-on-error: true
+
+      - name: Select Workspace for ACR
+        run: terraform workspace select uat
+
+      - name: Terraform Validate for ACR
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: |
+          #!/bin/bash
+          # shellcheck disable=SC2086
+          set -euo pipefail
+          export exitcode=0
+          terraform plan -var-file="../../uat/uat.tfvars" \
+            -var "container_registry=${{ vars.ACR_NAME }}" \
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+          # shellcheck disable=SC2086
+          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+          if [ $exitcode -eq 1 ]; then
+            echo "Error: Terraform plan failed"
+            exit 1
+          else
+            echo "Terraform plan was successful"
+            exit 0
+          fi
+
+      - name: Terraform Apply
+        run: |
+          terraform apply -auto-approve -var-file="../../uat/uat.tfvars" \
+            -var "container_registry=${{ vars.ACR_NAME }}" \
+            -var "subscription_id=${{ secrets.ARM_SUBSCRIPTION_ID }}"
+
+      # - name: Get Terraform Registry
+      #   id: registry_name
+      #   run: |
+      #     #!/bin/bash
+      #     set -euo pipefail
+      #     # shellcheck disable=SC2086
+      #     {
+      #       echo "dockerregistry=$(terraform output azurerm_container_registry_name)"
+      #       echo "resourcegroup=$(terraform output azurerm_resource_group_name)"
+      #     } >> "$GITHUB_OUTPUT"
  
       - name: validate endpoint of webapp
         run: |
@@ -131,7 +241,7 @@ jobs:
   destroy_terraform:
     name: "Destroy Environment"
     runs-on: ubuntu-latest
-    needs: [terraform]
+    needs: [terraform, terraform_uat]
     # sandpit-destroy has a 2 hour timer on the environment, so this job will be automatically triggered after that time
     # is up. This can be adjusted in the Repository home page
     environment: azure-react-app
